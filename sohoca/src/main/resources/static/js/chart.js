@@ -14,6 +14,30 @@ let tf3;
 
 var arr = {};
 
+let label = [
+				'중곡제1동',
+				'중곡제2동',
+				'중곡제3동',
+				'중곡제4동',
+				'능동',
+				'구의제1동',
+				'구의제2동',
+				'구의제3동',
+				'광장동',
+			];
+let backColor = [
+					'rgb(113, 139, 174)',
+					'rgb(255, 202, 100)',
+					'rgb(238, 142, 148)',
+					'rgb(185, 190, 196)',
+					'rgb(67, 78, 106)',
+					'rgb(202, 139, 174)',
+					'rgb(100, 202, 100)',
+					'rgb(196, 142, 148)',
+					'rgb(174, 196, 196)',
+					'rgb(67, 196, 106)'
+				];
+
 styleUpdate = function(e) {
 	e.style.backgroundColor = 'rgba(255,255,255,0.9)';
 	canvas.style.backgroundColor = 'rgba(0,0,0,0.5)';
@@ -47,17 +71,7 @@ function pieClick(id) {
 				console.log(arr);
 				const data = {
 					// 차트 상단에 범례
-					labels: [
-						'중곡제1동',
-						'중곡제2동',
-						'중곡제3동',
-						'중곡제4동',
-						'능동',
-						'구의제1동',
-						'구의제2동',
-						'구의제3동',
-						'광장동',
-					],
+					labels: label,
 					datasets: [{
 						// 나타낼 데이터
 						// data: [arr[0], arr[1], arr[2], arr[3], arr[4]],
@@ -66,18 +80,7 @@ function pieClick(id) {
 						],
 
 						// 데이터별 색
-						backgroundColor: [
-							'rgb(113, 139, 174)',
-							'rgb(255, 202, 100)',
-							'rgb(238, 142, 148)',
-							'rgb(185, 190, 196)',
-							'rgb(67, 78, 106)',
-							'rgb(202, 139, 174)',
-							'rgb(100, 202, 100)',
-							'rgb(196, 142, 148)',
-							'rgb(174, 196, 196)',
-							'rgb(67, 196, 106)'
-						],
+						backgroundColor: backColor,
 
 						// hover 이벤트
 						hoverOffset: 8
@@ -146,32 +149,11 @@ function barClick(id) {
 				})
 
 				const data = {
-					labels: [
-						'중곡제1동',
-						'중곡제2동',
-						'중곡제3동',
-						'중곡제4동',
-						'능동',
-						'구의제1동',
-						'구의제2동',
-						'구의제3동',
-						'광장동',
-					],
+					labels: label,
 					datasets: [{
 						label: 'label',
 						data: [arr.data[0].성비, arr.data[1].성비, arr.data[2].성비, arr.data[3].성비, arr.data[4].성비, arr.data[5].성비, arr.data[6].성비, arr.data[7].성비, arr.data[8].성비, arr.data[9].성비],
-						backgroundColor: [
-							'rgb(113, 139, 174)',
-							'rgb(255, 202, 100)',
-							'rgb(238, 142, 148)',
-							'rgb(185, 190, 196)',
-							'rgb(67, 78, 106)',
-							'rgb(202, 139, 174)',
-							'rgb(100, 202, 100)',
-							'rgb(196, 142, 148)',
-							'rgb(174, 196, 196)',
-							'rgb(67, 196, 106)'
-						],
+						backgroundColor: backColor,
 						hoverOffset: 8
 					}]
 				}
@@ -229,17 +211,7 @@ function lineClick(id) {
 				})
 
 				let speedData = {
-					labels: [
-						'중곡제1동',
-						'중곡제2동',
-						'중곡제3동',
-						'중곡제4동',
-						'능동',
-						'구의제1동',
-						'구의제2동',
-						'구의제3동',
-						'광장동',
-					],
+					labels: label,
 					datasets: [{
 						label: '성비',
 						data: [arr.data[0].성비, arr.data[1].성비, arr.data[2].성비, arr.data[3].성비, arr.data[4].성비, arr.data[5].성비, arr.data[6].성비, arr.data[7].성비, arr.data[8].성비, arr.data[9].성비],
