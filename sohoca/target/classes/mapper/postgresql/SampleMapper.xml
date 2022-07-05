@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.openmate.sample.mapper.sample.SampleMapper">
+
+    <resultMap id="ctprvnMap" type="map">
+        <result column="ctprvn_cd"  property="ctprvnCd" />
+		<result column="ctp_kor_nm" property="ctpKorNm" />
+        <!-- <result column="GEOM" 		property="geom" typeHandler="com.openmate.sample.util.GeometryTypeHandler" javaType="com.vividsolutions.jts.geom.Geometry" /> -->
+    </resultMap>
+    
+    <resultMap id="emdMap" type="map">
+        <result column="emd_cd"     property="emdCd" />
+		<result column="emd_kor_nm" property="emdKorNm" />
+        <!-- <result column="geom"		property="geom" typeHandler="com.openmate.sample.util.GeometryTypeHandler" javaType="com.vividsolutions.jts.geom.Geometry" /> -->
+    </resultMap>
+    
+    <resultMap id="statnInfoMap" type="map">
+        <result column="station_cd"	 property="stationCd" />
+		<result column="station_nm"  property="stationNm" />
+		<result column="line_no"     property="lineNo" />
+		<result column="address"     property="address" />
+		<result column="hous_id"     property="housId" />
+		<result column="x_axis"      property="xAxis" />
+		<result column="y_axis"      property="yAxis" />
+		<result column="bld_cd"      property="bldCd" />
+		<!-- <result column="geom"        property="geom" typeHandler="com.openmate.sample.util.GeometryTypeHandler" javaType="com.vividsolutions.jts.geom.Geometry" /> -->
+    </resultMap>
+
+	<!-- <select id="selectCtprvn" resultMap="ctprvnMap"> -->
+	<select id="selectCtprvn" resultType="OpenMap">
+		select ctprvn_cd, 
+			   ctp_kor_nm
+			  /* ,shape as geom */
+		  from tl_scco_ctprvn
+		 where ctprvn_cd = '11'
+	</select>
+	
+	<!-- <select id="selectEmd" resultMap="emdMap"> -->
+	<select id="selectEmd" resultType="OpenMap">
+		select emd_cd, 
+			   emd_kor_nm
+			 /*  ,shape ad geom */
+		  from tl_scco_emd
+		 where emd_cd like '1111%'
+		   and emd_cd = %emdCd%
+	</select>
+	
+	<select id="selectStatnInfo" resultMap="statnInfoMap">
+		select station_cd,
+			   station_nm,
+			   line_no,
+			   address,
+			   hous_id,
+			   x_axis,
+			   y_axis,
+			   bld_cd
+			  /* ,shape as geom */
+		  from public.tl_rlroad_statn_info
+		 where hous_id like '11%'
+	</select>	
+	
+</mapper>

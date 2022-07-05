@@ -1,0 +1,50 @@
+html, body {
+	height: 100%;
+}
+
+#map {
+	width: 1707.330px;
+	height: 907.333px;
+}
+
+body {
+	margin: 0;
+	text-align: center;
+}
+#canvas{
+	top: 0;
+	left: 0;
+	position: absolute;
+	padding: 5px;
+	z-index: 1000;
+	margin: 50px 0 0 20px;
+	display: none;
+}
+
+#btn{
+	top: 0;
+	left: 0;
+	position: absolute;
+	padding: 5px;
+	z-index: 1000;
+  cursor: pointer;
+}
+
+button {
+  all: unset;
+  background-color: white;
+  padding: 5px 0px;
+  width: 150px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 1);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+button:hover {
+  transform: scale(1.03);
+}

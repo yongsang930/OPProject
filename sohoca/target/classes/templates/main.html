@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!--프록시 태워서 하라-->
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
+
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6243337c960f6fa0ff36762f04348db9">
+
+	</script>
+	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=uf9y2qajej">
+
+	</script>
+	<script type="text/javascript" src="js/lib/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/Leaflet-1.6.0/leaflet.js"></script>
+	<!--사용할 좌표값 -->
+	<script type="text/javascript" src="js/lib/proj4/proj4.js"></script>
+	<script type="text/javascript" src="js/lib/proj4/proj4leaflet.js"></script>
+	<!--커스터마이징 -->
+	<script type="text/javascript" src="js/lib/Leaflet-1.6.0/LeafletBaseMapNHNWebDynamicMap2.js"></script>
+	<script type="text/javascript" src="js/map.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+	<script src="js/chart.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="js/lib/Leaflet-1.6.0/leaflet.css">
+</head>
+
+<body id="body">
+	<!-- s:image DownLoad -->
+	<!--<form name="imgForm" id="imgForm" action="<c:url value=" /cmm/mapImageDownload.do" />" method="post" enctype="multipart/form-data">-->
+	<form name="imgForm" id="imgForm" action="/mapImageDownload.do" method="post" enctype="multipart/form-data">
+		<input type="hidden" id="imgData" name="imgData" value="" />
+	</form>
+	<!-- e:image DownLoad -->
+
+	<div id="map">
+		<div id="btn">
+			<button id="SHOW_WMS_UMD" type="button" onclick="GCRM.fn.getWms()">WMS UMD</button>
+			<button id="SHOW_WFS_STATION" type="button" onclick="GCRM.fn.getWfs()">WFS STATION</button>
+			<button id="SHOW_WFS_UMD_POLY" type="button" onclick="GCRM.fn.getWfsUMD()">WFS UMD</button>
+
+			<button id="pie" onclick="pieClick('pieChart')">Pie Chart Open!</button>
+			<button id="bar" onclick="barClick('barChart')">Bar Chart Open!</button>
+			<button id="line" onclick="lineClick('lineChart')">Line Chart Open!</button>
+
+			<button id="capture" onclick="mapDownload('body')">CAPTURE</button>
+			<!--<button onclick="location.href='chart'">CHART PAGE</button>-->
+		</div>
+		<div id="canvas">
+			<canvas id="pieChart"></canvas>
+			<canvas id="barChart"></canvas>
+			<canvas id="lineChart"></canvas>
+		</div>
+	</div>
+	<script type="text/javascript">
+		// 차트의 버튼
+		var btnPie = document.getElementById("pie");
+		var btnBar = document.getElementById("bar");
+		var btnLine = document.getElementById("line");
+
+		$(document).ready(function () {
+			GCRM.fn.init('naver');
+		});
+
+		//현재 DIV 지도 이미지 다운로드
+		function mapDownload(divId) {
+
+			var agent = navigator.userAgent.toLowerCase();
+
+			//IE일때만 사용
+			if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+				var svgElements = $('#' + divId).find('svg');
+				svgElements.each(function () {
+					var canvas, xml;
+
+					canvas = document.createElement("canvas");
+					canvas.className = "screenShotTempCanvas";
+					//convert SVG into a XML string
+					xml = (new XMLSerializer()).serializeToString(this);
+
+					// Removing the name space as IE throws an error
+					xml = xml.replace(/xmlns=\"http:\/\/www\.w3\.org\/2000\/svg\"/, '');
+
+					console.log(xml);
+
+					//draw the SVG onto a canvas
+					canvgv2(canvas, xml);
+					$(canvas).insertAfter(this);
+					//hide the SVG element
+					this.className = "tempHide";
+					$(this).hide();
+				});
+			}
+
+			// 네이버, 카카오는 useCORS 옵션 없이 기본값으로 진행
+			html2canvas(document.querySelector("#" + divId), {
+				proxy: 'http://localhost:8080/proxyMethodGetMap.do'
+				, logging: false
+			}).then(function (canvas) {
+
+				var image = canvas.toDataURL("image/png");
+				$("#imgData").val(image);
+				$("#imgForm").submit();
+
+				//IE일때만
+				if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+					//After your image is generated revert the temporary changes
+					$('#' + divId).find('.screenShotTempCanvas').remove();
+					$('#' + divId).find('svg').show().removeClass('tempHide');
+					//$('#' + divId).find('.tempHide').show().removeClass('tempHide');
+				}
+			});
+		}
+	</script>
+
+</body>
+
+</html>

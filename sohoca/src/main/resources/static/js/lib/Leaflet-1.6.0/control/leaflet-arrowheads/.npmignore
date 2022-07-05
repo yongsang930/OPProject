@@ -1,0 +1,11 @@
+#Folders
+images/
+examples/
+
+#Files
+src/index.css
+src/index.html
+src/index.js
+.gitignore
+.gitattributes
+.npmignore

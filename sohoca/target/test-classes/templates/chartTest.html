@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+	<script type="text/javascript" src="js/lib/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="js/commonChartJS.js"></script>
+	<style>
+		canvas {
+			width: 500px;
+			height: 500px;
+		}
+	</style>
+	<title>TEST</title>
+</head>
+
+<body>
+	<canvas id="pie"></canvas>
+	<canvas id="line"></canvas>
+	<canvas id="bar"></canvas>
+
+	<script>
+		// 샘플 데이터
+		let labelEx = ["박용상", "유승학", "심익보", "김강한", "박현준", "유병성", "이성범", "안용민"];
+		let dataEx = [623, 1932, 3694, 10453, 14280, 8691, 7832, 4987];
+		let canvasNm = 'pie';
+		//let chartType = 'doughnut';
+		//let chartType = 'pie';
+		let chartType = 'line';
+
+		createChart(canvasNm, dataEx, labelEx, chartType);
+
+	</script>
+</body>
+
+</html>

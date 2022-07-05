@@ -1,0 +1,50 @@
+body {
+display: flex;
+flex-direction: column;
+}
+
+#canvas{
+	display:flex;
+	margin: 100px 0px;
+	justify-content: space-around;
+}
+
+
+canvas{
+	height:400px; 
+	width:500px;
+	padding: 10px;
+}
+
+
+#btn{
+	display: flex;
+	flex-direction: row;
+	justify-content:center;
+
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  background-color: white;
+  
+  padding: 5px 0px;
+  width: 150px;
+  
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 1);
+  
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 12px;
+  
+  margin: 0 5px;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
