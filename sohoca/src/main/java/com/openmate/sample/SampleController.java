@@ -38,7 +38,7 @@ public class SampleController {
 	private SampleService sampleService;
 
 	/**
-	 * html 而⑦룷�꼳�듃 �샇異�
+	 * html 컨포넌트 호출
 	 */
 	@RequestMapping({ "/", "/main" })
 	public String main() {
@@ -66,7 +66,7 @@ public class SampleController {
 	}
 
 	/*
-	 * �봽濡앹떆瑜� �씠�슜�븯�뿬 吏��룄 �씠誘몄� 議고쉶 (image/png)
+	 * 프록시를 이용하여 지도 이미지 조회 (image/png)
 	 */
 	@RequestMapping(value = "/proxyMethodGetMap.do")
 	@ResponseBody
@@ -74,8 +74,8 @@ public class SampleController {
 		HttpURLConnection con = null;
 		BufferedReader br = null;
 
-		// geourl �젙�쓽
-		// �씠誘몄� ���엯 蹂��솚
+		// geourl 정의
+		// 이미지 타입 변환
 		String urlStr = (String) req.getParameter("url");
 		try {
 			urlStr = StringEscapeUtils.unescapeHtml(urlStr);
@@ -96,9 +96,9 @@ public class SampleController {
 	}
 
 	/*
-	 * �씠誘몄� �떎�슫濡쒕뱶 (div �븞�뿉 �엳�뒗 媛앹껜�뱾 紐⑤몢 �떎�슫濡쒕뱶)-�겢�씪�씠�뼵�듃
+	 * 이미지 다운로드 (div 안에 있는 객체들 모두 다운로드)-클라이언트
 	 */
-	// �씠誘몄� �떎�슫濡쒕뱶 怨듯넻 紐⑤뱢濡� �궗�슜媛��뒫
+	// 이미지 다운로드 공통 모듈로 사용가능
 	@RequestMapping(value = "/mapImageDownload.do", method = RequestMethod.POST)
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
 		ByteArrayInputStream is = null;
