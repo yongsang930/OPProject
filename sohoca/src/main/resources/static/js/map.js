@@ -12,7 +12,6 @@ let tf_wms;
 let tf_wfs_poi;
 let tf_wfs_poly;
 
-
 // 지리정보시스템(GIS)과 고객관계관리(CRM)의 합성어로 지리정보시스템 기술을 활용한 고객관계관리 시스템 기술로 정의
 // GCRM 객체 생성
 GCRM = {
@@ -483,3 +482,229 @@ var map = L.map('map', {
 		L.bounds([-30000, -60000], [494288, 988576]), 
 	  });
 }); */
+
+
+var start_x = "";
+var start_y = "";
+var goal_x = "";
+var goal_y = "";
+var polyline;
+var start_marker;
+var goal_marker;
+
+var greenIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+var redIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+function driving() {
+	
+	$.ajax({
+		method: "GET",
+		url: "/driving",
+        data: {
+			start : start_x + ", " + start_y,
+			goal : goal_x + ", " + goal_y
+		},
+        datatype: "json",
+        success: function (data) {
+		
+			if(data != null) {
+				if(data.body.code === 1) {
+					alert("출발지와 도착지가 동일");
+					return;
+				}
+				if(data.body.code === 2) {
+					alert("출발지 또는 도착지가 도로 주변이 아닌 경우");
+					return;
+				}
+				if(data.body.code === 3) {
+					alert("자동차 길찾기 결과 제공 불가");
+					return;
+				}
+				if(data.body.code === 4) {
+					alert("경유지가 도로 주변이 아닌 경우");
+					return;
+				}
+				if(data.body.code === 4) {
+					alert("요청 경로가 매우 긴 경우(경유지를 포함한 직선거리의 합이 1500km이상인 경우)");
+					return;
+				}
+				
+				// y값이 앞으로 오게 변경
+				data.body.route.tracomfort[0].path.forEach(function (path){
+					let y = path.splice(1, 1);
+					path.splice(0, 0, y[0]);
+				});
+				
+				if(polyline != undefined || polyline != null) {
+                	polyline.remove();
+				}
+				
+				if(start_marker != undefined || start_marker != null) {
+					start_marker.remove();
+				}
+				
+				if(goal_marker != undefined || goal_marker != null) {
+					goal_marker.remove();
+				}
+				
+				polyline = L.polyline(data.body.route.tracomfort[0].path, {color: 'red'}).addTo(GCRM.MAP);
+				
+				start_marker = L.marker([start_y, start_x], {icon: greenIcon}).addTo(GCRM.MAP);
+				start_marker.bindPopup("출발지");
+				
+				goal_marker = L.marker([goal_y, goal_x], {icon: redIcon}).addTo(GCRM.MAP);
+				goal_marker.bindPopup("도착지");
+
+			    
+				GCRM.MAP.fitBounds(polyline.getBounds());
+			}
+		    
+        },
+        error: function (xhr, status, error) {
+            console.log("ERROR!!!");
+        }
+	});
+}
+
+function startSearch() {
+	
+	if($("#startSearch").val() === "") {
+		alert("출발지를 입력해주세요.");
+		return;	
+	}
+	
+	$.ajax({
+		method: "GET",
+		url: "/addrSearch",
+        data: {
+			query: $("#startSearch").val()
+		},
+        datatype: "json",
+        success: function (data) {
+			console.log(data);
+			
+			$("#startTable > tbody > tr").remove();
+			
+			var items = data.body.items;
+			if(items.length === 0) {
+				alert("조회값이 없습니다.");				
+			} else {
+				var html = "";
+				items.forEach(function (item, index){
+					
+					html =  "<tr>";
+					html += 	"<td>" + item.address + "</td>";
+					html += 	"<td>" + item.roadAddress + "</td>";
+					html += 	"<td><button class='startClick'>선택</button></td>";
+					html += "</tr>";
+					
+					$("#startTable > tbody:last").append(html);
+				})
+			}
+        },
+        error: function (xhr, status, error) {
+            console.log("ERROR!!!");
+        }
+	});
+}
+
+function goalSearch() {
+	
+	if($("#goalSearch").val() === "") {
+		alert("출발지를 입력해주세요.");
+		return;	
+	}
+	
+	$.ajax({
+		method: "GET",
+		url: "/addrSearch",
+        data: {
+			query: $("#goalSearch").val()
+		},
+        datatype: "json",
+        success: function (data) {
+			console.log(data);
+			
+			$("#goalTable > tbody > tr").remove();
+			
+			var items = data.body.items;
+			if(items.length === 0) {
+				alert("조회값이 없습니다.");				
+			} else {
+				var html = "";
+				items.forEach(function (item, index){
+					
+					html =  "<tr>";
+					html += 	"<td>" + item.address + "</td>";
+					html += 	"<td>" + item.roadAddress + "</td>";
+					html += 	"<td><button class='goalClick'>선택</button></td>";
+					html += "</tr>";
+					
+					$("#goalTable > tbody:last").append(html);
+				})
+			}
+        },
+        error: function (xhr, status, error) {
+            console.log("ERROR!!!");
+        }
+	});
+}
+
+$(document).on("click", ".startClick", function() {
+	$("#start").val($(this).parent().parent().children().eq(1).text());
+	
+	$.ajax({
+		method: "GET",
+		url: "/geocoding",
+        data: {
+			query: $("#start").val()
+		},
+        datatype: "json",
+        success: function (data) {	
+			start_x = data.body.addresses[0].x;
+			start_y = data.body.addresses[0].y;
+        },
+        error: function (xhr, status, error) {
+            console.log("ERROR!!!");
+        }
+	});
+	
+	$("#goalModalShow").trigger("click");
+});
+
+$(document).on("click", ".goalClick", function() {
+	$("#goal").val($(this).parent().parent().children().eq(1).text());
+	
+	$.ajax({
+		method: "GET",
+		url: "/geocoding",
+        data: {
+			query: $("#goal").val()
+		},
+        datatype: "json",
+        success: function (data) {	
+			goal_x = data.body.addresses[0].x;
+			goal_y = data.body.addresses[0].y;
+        },
+        error: function (xhr, status, error) {
+            console.log("ERROR!!!");
+        }
+	});
+	
+	$(".btn-close").trigger("click");
+})

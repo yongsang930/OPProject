@@ -25,7 +25,12 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 	<script src="js/chart.js"></script>
+	<!-- bootstrap -->
+	<script src="js/lib/bootstrap/bootstrap.min.js"></script>
 
+	<!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.min.css">
+	
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="js/lib/Leaflet-1.6.0/leaflet.css">
 </head>
@@ -38,8 +43,8 @@
 	</form>
 	<!-- e:image DownLoad -->
 
-	<div id="map">
-		<div id="btn">
+	<div id="map" style="position: absolute; top: 0; bottom: 0; width: 100%; height: 100%;">
+		<div class="btn">
 			<button id="SHOW_WMS_UMD" type="button" onclick="GCRM.fn.getWms()">WMS UMD</button>
 			<button id="SHOW_WFS_STATION" type="button" onclick="GCRM.fn.getWfs()">WFS STATION</button>
 			<button id="SHOW_WFS_UMD_POLY" type="button" onclick="GCRM.fn.getWfsUMD()">WFS UMD</button>
@@ -49,21 +54,98 @@
 			<button id="line" onclick="lineClick('lineChart')">Line Chart Open!</button>
 
 			<button id="capture" onclick="mapDownload('body')">CAPTURE</button>
-			<!--<button onclick="location.href='chart'">CHART PAGE</button>-->
 		</div>
 		<div id="canvas">
 			<canvas id="pieChart"></canvas>
 			<canvas id="barChart"></canvas>
 			<canvas id="lineChart"></canvas>
 		</div>
+		<div class="btn" style="top: 40px;">
+			<input class="form-control" type="text" id="start" placeholder="출발지" style="width: 400px;" readonly>
+		</div>
+		<div class="btn" style="top: 80px;">
+			<input class="form-control" type="text" id="goal"  placeholder="도착지" style="width: 400px;" readonly>
+		</div>
+		<div class="btn" style="top: 130px;">
+			<a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button" style="width: 200px; color: #fff;">
+				출발지 & 도착지 검색
+			</a>
+			<button type="button" onclick="driving()" style="margin-left: 220px;">길찾기</button>
+		</div>
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered"  style="max-width: 1000px;">
+			<div class="modal-content">
+				<div class="modal-header">
+<!-- 					<h5 class="modal-title" id="exampleModalToggleLabel">출발지</h5> -->
+					<input type="text" id="startSearch" placeholder="출발지" style="width: 200px;">
+					<button onclick="startSearch()">검색</button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+					</button>
+				</div>
+				<div class="modal-body">
+					<table id="startTable" class="table table-striped">
+						<thead>
+							<tr>
+								<th>옛 주소</th>
+								<th>도로명 주소</th>
+								<th>선택</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button id="goalModalShow" class="btn btn-primary" style="position: relative;" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">
+						도착지 설정으로
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
+			<div class="modal-content">
+				<div class="modal-header">
+<!-- 					<h5 class="modal-title" id="exampleModalToggleLabel2">도착지</h5> -->
+					<input type="text" id="goalSearch" placeholder="도착지" style="width: 200px;">
+					<button onclick="goalSearch()">검색</button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<table id="goalTable" class="table table-striped">
+						<thead>
+							<tr>
+								<th>옛 주소</th>
+								<th>도로명 주소</th>
+								<th>선택</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button id="startModalShow" class="btn btn-primary" style="position: relative;"
+						data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+						data-bs-dismiss="modal">출발지 설정으로</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<script type="text/javascript">
 		// 차트의 버튼
 		var btnPie = document.getElementById("pie");
 		var btnBar = document.getElementById("bar");
 		var btnLine = document.getElementById("line");
 
-		$(document).ready(function () {
+		$(document).ready(function() {
 			GCRM.fn.init('naver');
 		});
 
@@ -117,7 +199,5 @@
 			});
 		}
 	</script>
-
 </body>
-
 </html>

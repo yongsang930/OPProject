@@ -8,6 +8,7 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +17,10 @@ import org.apache.tomcat.util.codec.binary.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import com.openmate.sample.service.SampleService;
@@ -35,7 +38,7 @@ public class SampleController {
 	private SampleService sampleService;
 
 	/**
-	 * html 컨포넌트 호출
+	 * html 而⑦룷�꼳�듃 �샇異�
 	 */
 	@RequestMapping({ "/", "/main" })
 	public String main() {
@@ -63,7 +66,7 @@ public class SampleController {
 	}
 
 	/*
-	 * 프록시를 이용하여 지도 이미지 조회 (image/png)
+	 * �봽濡앹떆瑜� �씠�슜�븯�뿬 吏��룄 �씠誘몄� 議고쉶 (image/png)
 	 */
 	@RequestMapping(value = "/proxyMethodGetMap.do")
 	@ResponseBody
@@ -71,8 +74,8 @@ public class SampleController {
 		HttpURLConnection con = null;
 		BufferedReader br = null;
 
-		// geourl 정의
-		// 이미지 타입 변환
+		// geourl �젙�쓽
+		// �씠誘몄� ���엯 蹂��솚
 		String urlStr = (String) req.getParameter("url");
 		try {
 			urlStr = StringEscapeUtils.unescapeHtml(urlStr);
@@ -93,16 +96,16 @@ public class SampleController {
 	}
 
 	/*
-	 * 이미지 다운로드 (div 안에 있는 객체들 모두 다운로드)-클라이언트
+	 * �씠誘몄� �떎�슫濡쒕뱶 (div �븞�뿉 �엳�뒗 媛앹껜�뱾 紐⑤몢 �떎�슫濡쒕뱶)-�겢�씪�씠�뼵�듃
 	 */
-	// 이미지 다운로드 공통 모듈로 사용가능
+	// �씠誘몄� �떎�슫濡쒕뱶 怨듯넻 紐⑤뱢濡� �궗�슜媛��뒫
 	@RequestMapping(value = "/mapImageDownload.do", method = RequestMethod.POST)
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
 		ByteArrayInputStream is = null;
 		try {
 			Date d = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
-			String newFileName = "지도Image" + sdf.format(d) + ".png";
+			String newFileName = "吏��룄Image" + sdf.format(d) + ".png";
 			String imgData = request.getParameter("imgData");
 			if (imgData != null)
 				imgData = imgData.replaceAll("data:image/png;base64,", "");
@@ -122,5 +125,20 @@ public class SampleController {
 				is.close();
 			}
 		}
+	}
+	
+	@GetMapping("/driving")
+	public @ResponseBody Map<String, Object> naverMapDriving(@RequestParam String start, @RequestParam String goal) {
+		return sampleService.naverDriving(start, goal);
+	}
+	
+	@GetMapping("/geocoding")
+	public @ResponseBody Map<String, Object> naverMapDriving(@RequestParam String query) {
+		return sampleService.naverGeocoding(query);
+	}
+	
+	@GetMapping("/addrSearch")
+	public @ResponseBody Map<String, Object> naverAddrSearch(@RequestParam String query) {
+		return sampleService.naverAddrSearch(query);
 	}
 }
